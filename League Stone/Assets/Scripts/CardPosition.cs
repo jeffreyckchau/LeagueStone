@@ -2,18 +2,21 @@
 using System.Collections;
 /**
  * Script determining where the card position should be depending on the private state of the card.
- * This will eventually handle the animation of each card as well. 
+ * This will eventually handle the animation of each card as well. Currently, the game tracks all the
+ * cards at once; no garbage collection.
  * -Jeffrey Chau
  * */
 public class CardPosition : MonoBehaviour {
 
 	private enum state {inDeck = 0, underInspection, inHand, onField, inGraveyard};
+	public float ANIMATION_SPEED = 0.1f;
 
 	//Assign empty GameObjects in the editor to hold positions
 	public static GameObject deck, field, hand, inspection, graveyard;
 	private state cardState;
 
 	private Vector3 deckPosition, initialFieldPosition, initialHandPosition, inspectionPosition, graveyardPosition;
+
 
 	// Use this for initialization
 	void Start () {
@@ -24,7 +27,6 @@ public class CardPosition : MonoBehaviour {
 		graveyard = GameObject.FindWithTag("GravePosition");
 
 
-
 		deckPosition = deck.transform.position;
 		initialFieldPosition = field.transform.position;
 		initialHandPosition = hand.transform.position;
@@ -32,26 +34,32 @@ public class CardPosition : MonoBehaviour {
 		graveyardPosition = graveyard.transform.position;
 
 		cardState = state.inDeck;
+		this.transform.position = deck.transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//Need to also update all the rotations;
 		if (cardState == state.inDeck) {
-			this.transform.position = deckPosition;
+			transform.position = Vector3.Lerp(this.transform.position, deckPosition, ANIMATION_SPEED);
+			transform.rotation = Quaternion.Lerp(this.transform.rotation, deck.transform.rotation, ANIMATION_SPEED);
 		}
 		if (cardState == state.inHand) {
 			//Need to change to compute against multiple hands
-			this.transform.position = initialHandPosition;
+			transform.position = Vector3.Lerp(this.transform.position, initialHandPosition, ANIMATION_SPEED);
+			transform.rotation = Quaternion.Lerp(this.transform.rotation, hand.transform.rotation, ANIMATION_SPEED);
 		}
 		if (cardState == state.underInspection) {
-			this.transform.position = inspectionPosition;
+			transform.position = Vector3.Lerp(this.transform.position, inspectionPosition, ANIMATION_SPEED);
+			transform.rotation = Quaternion.Lerp(this.transform.rotation, inspection.transform.rotation, ANIMATION_SPEED);
 		}
 		if (cardState == state.onField) {
-			this.transform.position = initialFieldPosition;
+			transform.position = Vector3.Lerp(this.transform.position, initialFieldPosition, ANIMATION_SPEED);
+			transform.rotation = Quaternion.Lerp(this.transform.rotation, field.transform.rotation, ANIMATION_SPEED);
 		}
 		if (cardState == state.inGraveyard) {
-			this.transform.position = graveyardPosition;
+			transform.position = Vector3.Lerp(this.transform.position, graveyardPosition, ANIMATION_SPEED);
+			transform.rotation = Quaternion.Lerp(this.transform.rotation, graveyard.transform.rotation, ANIMATION_SPEED);
 		}
 	}
 
