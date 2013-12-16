@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CardCamera : MonoBehaviour {
+public class CameraScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -14,7 +14,9 @@ public class CardCamera : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit, 100)) {
-				Debug.Log(hit);
+				if (hit.collider.gameObject.CompareTag("Card")) {
+					Debug.Log("Card click");
+				}
 			}
 		}
 	}
