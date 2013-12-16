@@ -7,7 +7,7 @@ using System.Collections;
  * */
 public class CardPosition : MonoBehaviour {
 
-	private enum state {inDeck = 1, underInspection, inHand, onField, inGraveyard};
+	private enum state {inDeck = 0, underInspection, inHand, onField, inGraveyard};
 
 	//Assign empty GameObjects in the editor to hold positions
 	public static GameObject deck, field, hand, inspection, graveyard;
@@ -55,6 +55,9 @@ public class CardPosition : MonoBehaviour {
 		}
 	}
 
+
+
+	//Animation utilities
 	public void goToDeck() {
 		cardState = state.inDeck;
 	}
