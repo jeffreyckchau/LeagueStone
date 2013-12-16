@@ -11,18 +11,23 @@ public class CardPosition : MonoBehaviour {
 	private enum state {inDeck = 0, underInspection, inHand, onField, inGraveyard};
 	public float ANIMATION_SPEED = 0.1f;
 
-	//Assign empty GameObjects in the editor to hold positions
-	public static GameObject deck, field, hand, inspection, graveyard;
+	//Assign empty GameObjects in the editor to hold positions and rotations
+	public static GameObject deck, field, hand, endHand, inspection, graveyard;
 	private state cardState;
 
-	private Vector3 deckPosition, initialFieldPosition, initialHandPosition, inspectionPosition, graveyardPosition;
+	private Vector3 deckPosition, initialFieldPosition, initialHandPosition, finalHandPosition, inspectionPosition, graveyardPosition;
 
+	private Vector3 handPosition;
+	private Quaternion handRotation;
 
 	// Use this for initialization
 	void Start () {
+		Camera.main.GetComponent<CameraScript>().addCard(transform);
+
 		deck = GameObject.FindWithTag("DeckPosition");
 		field = GameObject.FindWithTag("FieldPosition");
 		hand = GameObject.FindWithTag("HandPosition");
+		endHand = GameObject.FindWithTag("End Hand");
 		inspection = GameObject.FindWithTag("Inspection");
 		graveyard = GameObject.FindWithTag("GravePosition");
 
@@ -30,6 +35,7 @@ public class CardPosition : MonoBehaviour {
 		deckPosition = deck.transform.position;
 		initialFieldPosition = field.transform.position;
 		initialHandPosition = hand.transform.position;
+		finalHandPosition = endHand.transform.position;
 		inspectionPosition = inspection.transform.position;
 		graveyardPosition = graveyard.transform.position;
 
@@ -46,8 +52,8 @@ public class CardPosition : MonoBehaviour {
 		}
 		if (cardState == state.inHand) {
 			//Need to change to compute against multiple hands
-			transform.position = Vector3.Lerp(this.transform.position, initialHandPosition, ANIMATION_SPEED);
-			transform.rotation = Quaternion.Lerp(this.transform.rotation, hand.transform.rotation, ANIMATION_SPEED);
+			transform.position = Vector3.Lerp(this.transform.position, handPosition, ANIMATION_SPEED);
+			transform.rotation = Quaternion.Lerp(this.transform.rotation, handRotation, ANIMATION_SPEED);
 		}
 		if (cardState == state.underInspection) {
 			transform.position = Vector3.Lerp(this.transform.position, inspectionPosition, ANIMATION_SPEED);
@@ -78,8 +84,12 @@ public class CardPosition : MonoBehaviour {
 		cardState = state.inGraveyard;
 	}
 
-	public void goToHand() {
+	public void goToHand(float capacity, float progress) {
 		cardState = state.inHand;
+		handPosition = Vector3.Slerp(initialHandPosition, finalHandPosition, (1/(capacity+1))+((1/capacity)*progress));
+		handRotation = Quaternion.Slerp(hand.transform.rotation, endHand.transform.rotation, (1/(capacity+1))+((1/capacity)*progress));
+//		handPosition = Vector3.Slerp(initialHandPosition, finalHandPosition, 0.5f);
+//		handRotation = Quaternion.Slerp(hand.transform.rotation, endHand.transform.rotation, 0.5f);
 	}
 
 	public void goToField() {
