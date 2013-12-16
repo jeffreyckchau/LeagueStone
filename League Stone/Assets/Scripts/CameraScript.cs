@@ -7,10 +7,9 @@ using System.Collections.Generic;
  * */
 public class CameraScript : MonoBehaviour {
 
-	private int counter; 
 
 	//List of cards in hand
-	private ArrayList cards;
+	private List<myCard> cards;
 //	private class transformPair {
 //		transformPair(Vector3 position, Quaternion rotation) {
 //			cardPos = position;
@@ -22,13 +21,20 @@ public class CameraScript : MonoBehaviour {
 
 //	private Dictionary<int, transformPair> positions; //Initialize?
 
+	private class myCard {
+		public myCard(Transform newCard) {
+			card = newCard;
+		}
+		public Transform card;
+		public int counter = 0;
+	}
+
 	void Awake() {
-		cards = new ArrayList();
+		cards = new List<myCard>();
 	}
 
 	// Use this for initialization
 	void Start () {
-		counter = 0; 
 
 	}
 	
@@ -46,29 +52,29 @@ public class CameraScript : MonoBehaviour {
 				if (hit.collider.gameObject.CompareTag("Card")) {
 					Debug.Log("Card");
 					for (int ii = 0; ii < cards.Count; ++ii) {
-						if (cards[ii] == hit.transform) {
+						if (cards[ii].card == hit.transform) {
 
-							if (counter % 5 == 0) {
+							if (cards[ii].counter % 5 == 0) {
 								Debug.Log("Hit");
 								hit.transform.GetComponent<CardPosition>().goToDeck();
 							}
-							else if (counter % 5 == 1) {
+							else if (cards[ii].counter % 5 == 1) {
 								Debug.Log("Hit");
 								hit.transform.GetComponent<CardPosition>().goToInspection();
 							}
-							else if (counter % 5 == 2) {
+							else if (cards[ii].counter % 5 == 2) {
 								Debug.Log("Hit");
 								hit.transform.GetComponent<CardPosition>().goToHand((float)cards.Count, ii);
 							}
-							else if (counter % 5 == 3) {
+							else if (cards[ii].counter % 5 == 3) {
 								Debug.Log("Hit");
 								hit.transform.GetComponent<CardPosition>().goToField();
 							}
-							else if (counter % 5 == 4) {
+							else if (cards[ii].counter % 5 == 4) {
 								Debug.Log("Hit");
 								hit.transform.GetComponent<CardPosition>().goToGraveyard();
 							}
-							counter++;
+							cards[ii].counter++;
 
 						}
 					}
@@ -83,7 +89,7 @@ public class CameraScript : MonoBehaviour {
 	}
 	public void addCard(Transform card) {
 		Debug.Log(cards.Count + "This is the card" + card);
-		cards.Add(card);
+		cards.Add(new myCard(card));
 		Debug.Log("Card Added");
 	}
 }
