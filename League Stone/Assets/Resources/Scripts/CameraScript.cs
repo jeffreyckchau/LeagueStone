@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 /**
@@ -86,35 +86,35 @@ public class CameraScript : MonoBehaviour {
 							if (hit.transform == c.card) {
 								hit.transform.GetComponent<CardPosition>().goToInspection();
 								hit.transform.GetComponent<CardPosition>().updatePosition(Inspect.Count, Inspect.IndexOf(c));
-								break;
+								return;
 							}
 						}
 						foreach (myCard c in Inspect) {
 							if (hit.transform == c.card) {
 								hit.transform.GetComponent<CardPosition>().goToHand();
 								hit.transform.GetComponent<CardPosition>().updatePosition(Hand.Count, Hand.IndexOf(c));
-								break;
+								return;
 							}
 						}
 						foreach (myCard c in Hand) {
 							if (hit.transform == c.card) {
 								hit.transform.GetComponent<CardPosition>().goToField();
 								hit.transform.GetComponent<CardPosition>().updatePosition(Field.Count, Field.IndexOf(c));
-								break;
+								return;
 							}
 						}
 						foreach (myCard c in Field) {
 							if (hit.transform == c.card) {
 								hit.transform.GetComponent<CardPosition>().goToGraveyard();
 								hit.transform.GetComponent<CardPosition>().updatePosition();
-								break;
+								return;
 							}
 						}
 						foreach (myCard c in Graveyard) {
 							if (hit.transform == c.card) {
 								hit.transform.GetComponent<CardPosition>().goToDeck();
 								hit.transform.GetComponent<CardPosition>().updatePosition();
-								break;
+								return;
 							}
 						}
 					}
