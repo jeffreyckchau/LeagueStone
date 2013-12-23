@@ -118,11 +118,12 @@ public class CameraScript : MonoBehaviour {
 							}
 						}
 					}
-
+					Debug.Log("Blak");
 					//If it's the deck
-					if (hit.collider.gameObject.CompareTag("Deck")) {
-						Instantiate(Resources.Load("Prefabs/Common Card"));
-					}
+				}
+				else if (hit.collider.gameObject.CompareTag("Deck")) {
+					Debug.Log("Deck");
+					Instantiate(Resources.Load("Prefabs/Common Card"));
 				}
 			}
 
